@@ -1,6 +1,10 @@
 # Bicep build artifacts
 *.json
 !package.json
+!frontend/package-lock.json
+!frontend/tsconfig*.json
+!frontend/.oxlintrc.json
+!frontend/components.json
 
 # Python
 .venv/
@@ -15,4 +19,4 @@ htmlcov/
 
 # Local env / db
 .env
-heatctl.db
+goodhvac.db

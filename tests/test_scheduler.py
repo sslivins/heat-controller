@@ -9,9 +9,9 @@ from unittest.mock import patch
 import pytest
 from sqlalchemy import select
 
-from heatctl import scheduler
-from heatctl.database import session_scope
-from heatctl.models import Device, ScheduleEntry
+from goodhvac import scheduler
+from goodhvac.database import session_scope
+from goodhvac.models import Device, ScheduleEntry
 
 
 async def _make_device_with_entry(day_of_week: int, time_of_day: time, **entry_kwargs) -> tuple[int, int]:

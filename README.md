@@ -1,10 +1,10 @@
-# heat-controller
+# goodhvac
 
 Centralized scheduling and control for a fleet of Venstar T8900
 thermostats, plus the Azure networking (Bicep) needed to reach devices
 behind a remote site's router.
 
-- **`heatctl/`** -- FastAPI app: device registry + centralized
+- **`goodhvac/`** -- FastAPI app: device registry + centralized
   schedule (day/time -> setpoints) + a background scheduler loop that
   pushes due schedule entries to devices via
   [`pyvenstar`](https://pypi.org/project/pyvenstar/).
@@ -15,8 +15,8 @@ behind a remote site's router.
 
 The T8900 Local API has no remote-writable weekly schedule endpoint --
 schedules configured through the device's own UI aren't reachable or
-settable over the network. So `heatctl` keeps the schedule in its own
-Postgres DB and a background loop (`heatctl/scheduler.py`) pushes
+settable over the network. So `goodhvac` keeps the schedule in its own
+Postgres DB and a background loop (`goodhvac/scheduler.py`) pushes
 setpoints to each device at the right time, rather than relying on
 each device to run its own schedule.
 
@@ -46,7 +46,7 @@ needed for `pytest`.
 python -m venv .venv
 .venv\Scripts\activate       # Windows
 pip install -r requirements.txt -r requirements-test.txt
-pytest -q --cov=heatctl --cov-report=term-missing
+pytest -q --cov=goodhvac --cov-report=term-missing
 ```
 
 ## Database migrations
@@ -109,10 +109,10 @@ workflow here is:
 az login --tenant af755c27-6a67-4492-b1a4-ca3ce41dea42
 az account set --subscription 9e09ebcd-8a09-4696-86c5-6385299f1113
 
-az group create --name heat-controller-dev-rg --location westus
+az group create --name goodhvac-dev-rg --location westus
 
 az deployment group create \
-  --resource-group heat-controller-dev-rg \
+  --resource-group goodhvac-dev-rg \
   --template-file infra/main.bicep \
   --parameters infra/parameters/dev.bicepparam \
   --parameters remoteGatewayIp='<your-udm-wan-ip>' \
@@ -145,7 +145,7 @@ static routes on both sides instead.
 ## Teardown
 
 ```bash
-az group delete --name heat-controller-dev-rg --yes --no-wait
+az group delete --name goodhvac-dev-rg --yes --no-wait
 ```
 
 ## Next steps

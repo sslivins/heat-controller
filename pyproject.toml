@@ -5,7 +5,8 @@ pythonpath = ["."]
 
 [tool.coverage.run]
 branch = false
-source = ["heatctl"]
+source = ["goodhvac"]
+concurrency = ["greenlet", "thread"]
 omit = [
     "*/tests/*",
     "*/alembic/*",

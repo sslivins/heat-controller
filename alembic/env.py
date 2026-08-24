@@ -1,7 +1,7 @@
-"""Alembic environment for heat-controller.
+"""Alembic environment for goodhvac.
 
 Mirrors agora-cms's env.py structure but simplified: this is a
-single-service app (no shared/ package split), so only heatctl.models
+single-service app (no shared/ package split), so only goodhvac.models
 needs importing to register the full metadata.
 """
 
@@ -16,9 +16,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from heatctl.database import Base
-import heatctl.models  # noqa: F401 -- registers tables with Base.metadata
-from heatctl.config import settings
+from goodhvac.database import Base
+import goodhvac.models  # noqa: F401 -- registers tables with Base.metadata
+from goodhvac.config import settings
 
 config = context.config
 

@@ -14,13 +14,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: heatctl
-          POSTGRES_PASSWORD: heatctl
-          POSTGRES_DB: heatctl
+          POSTGRES_USER: goodhvac
+          POSTGRES_PASSWORD: goodhvac
+          POSTGRES_DB: goodhvac
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U heatctl -d heatctl"
+          --health-cmd "pg_isready -U goodhvac -d goodhvac"
           --health-interval 5s
           --health-timeout 3s
           --health-retries 5
@@ -38,17 +38,17 @@ jobs:
           pip install -r requirements.txt -r requirements-test.txt ruff mypy
 
       - name: Lint (ruff)
-        run: ruff check heatctl tests
+        run: ruff check goodhvac tests
 
       - name: Type-check (mypy)
-        run: mypy heatctl
+        run: mypy goodhvac
 
       - name: Alembic migrations up to date
         env:
-          HEATCTL_DATABASE_URL: postgresql+asyncpg://heatctl:heatctl@localhost:5432/heatctl
+          GOODHVAC_DATABASE_URL: postgresql+asyncpg://goodhvac:goodhvac@localhost:5432/goodhvac
         run: |
           alembic upgrade head
           alembic check
 
       - name: Run tests
-        run: pytest -q --cov=heatctl --cov-report=term-missing --cov-fail-under=85
+        run: pytest -q --cov=goodhvac --cov-report=term-missing --cov-fail-under=85
