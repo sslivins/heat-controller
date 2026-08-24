@@ -38,6 +38,10 @@ ROOT_PAYLOAD = {"api_ver": 9, "type": "commercial", "model": "COLORTOUCH", "firm
 def mock_device(requests_mock):
     requests_mock.get("https://192.168.1.149:443/", json=ROOT_PAYLOAD)
     requests_mock.get("https://192.168.1.149:443/query/info", json=INFO_PAYLOAD)
+    requests_mock.get(
+        "https://192.168.1.149:443/query/sensors",
+        json={"sensors": [{"name": "Thermostat", "temp": 70.0, "hum": 45}]},
+    )
     requests_mock.post("https://192.168.1.149:443/control", json={"success": True})
     return requests_mock
 
@@ -46,6 +50,7 @@ def test_get_status_online(mock_device):
     status = get_status(_device())
     assert status.online is True
     assert status.space_temp == 70.0
+    assert status.humidity == 45
 
 
 def test_get_status_unreachable():

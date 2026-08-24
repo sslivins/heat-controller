@@ -190,6 +190,7 @@ class DeviceStatusCache(Base):
     space_temp: Mapped[float | None] = mapped_column(Float, nullable=True)
     heat_temp: Mapped[float | None] = mapped_column(Float, nullable=True)
     cool_temp: Mapped[float | None] = mapped_column(Float, nullable=True)
+    humidity: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     consecutive_failures: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -58,6 +58,15 @@ export default function App() {
     return api.bulkApply({ device_ids: [...selected], mode, heat_temp: heatTemp, cool_temp: coolTemp });
   }
 
+  async function handleSingleApply(
+    deviceId: number,
+    mode: string | null,
+    heatTemp: number | null,
+    coolTemp: number | null,
+  ) {
+    await api.bulkApply({ device_ids: [deviceId], mode, heat_temp: heatTemp, cool_temp: coolTemp });
+  }
+
   async function handleSaveDevice(payload: DeviceCreate | DeviceUpdate) {
     if (editingDevice) {
       await api.updateDevice(editingDevice.id, payload);
@@ -133,6 +142,7 @@ export default function App() {
                       onToggleSelect={toggleSelect}
                       onEdit={setEditingDevice}
                       onDelete={handleDeleteDevice}
+                      onApply={handleSingleApply}
                     />
                   ))}
                 </div>

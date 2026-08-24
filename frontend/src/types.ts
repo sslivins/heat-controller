@@ -62,6 +62,7 @@ export interface DeviceStatusMessage {
   space_temp: number | null;
   heat_temp: number | null;
   cool_temp: number | null;
+  humidity: number | null;
   consecutive_failures: number;
   last_success_at: string | null;
   last_error: string | null;

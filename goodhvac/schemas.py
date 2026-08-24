@@ -108,6 +108,7 @@ class DeviceStatus(BaseModel):
     space_temp: float | None = None
     heat_temp: float | None = None
     cool_temp: float | None = None
+    humidity: int | None = None
 
 
 class DeviceStatusRead(BaseModel):
@@ -122,6 +123,7 @@ class DeviceStatusRead(BaseModel):
     space_temp: float | None
     heat_temp: float | None
     cool_temp: float | None
+    humidity: int | None
     consecutive_failures: int
     last_success_at: datetime | None
     last_error: str | None

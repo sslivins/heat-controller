@@ -36,6 +36,13 @@ def get_status(device: Device) -> DeviceStatus:
     try:
         with client_for(device) as client:
             info = client.get_info()
+            humidity = None
+            try:
+                sensors = client.get_sensors()
+                humidity = next((s.humidity for s in sensors if s.humidity is not None), None)
+            except (VenstarConnectionError, VenstarAPIError) as exc:
+                # Humidity is a nice-to-have; don't fail the whole status fetch over it.
+                logger.warning("Device %s (%s) sensor read failed: %s", device.name, device.host, exc)
             return DeviceStatus(
                 online=True,
                 mode=info.mode.name,
@@ -43,6 +50,7 @@ def get_status(device: Device) -> DeviceStatus:
                 space_temp=info.space_temp,
                 heat_temp=info.heat_temp,
                 cool_temp=info.cool_temp,
+                humidity=humidity,
             )
     except (VenstarConnectionError, VenstarAPIError) as exc:
         logger.warning("Device %s (%s) unreachable: %s", device.name, device.host, exc)

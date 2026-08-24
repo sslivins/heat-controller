@@ -113,6 +113,7 @@ async def _poll_device(device_id: int, semaphore: asyncio.Semaphore) -> None:
                 cache.space_temp = live.space_temp
                 cache.heat_temp = live.heat_temp
                 cache.cool_temp = live.cool_temp
+                cache.humidity = live.humidity
             else:
                 cache.consecutive_failures += 1
                 cache.last_error = live.error
@@ -138,6 +139,7 @@ def status_message(cache: DeviceStatusCache) -> dict:
         "space_temp": cache.space_temp,
         "heat_temp": cache.heat_temp,
         "cool_temp": cache.cool_temp,
+        "humidity": cache.humidity,
         "consecutive_failures": cache.consecutive_failures,
         "last_success_at": cache.last_success_at.isoformat() if cache.last_success_at else None,
         "last_error": cache.last_error,
