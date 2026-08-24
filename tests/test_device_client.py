@@ -60,3 +60,36 @@ def test_apply_setpoints_fills_missing_side(mock_device):
     control_request = [r for r in mock_device.request_history if r.path == "/control"][0]
     assert "heattemp=69" in control_request.text
     assert "cooltemp=75" in control_request.text
+
+
+def test_apply_bulk_action_mode_only(mock_device):
+    from heatctl.device_client import apply_bulk_action
+
+    apply_bulk_action(_device(), mode="HEAT", heat_temp=None, cool_temp=None)
+
+    control_requests = [r for r in mock_device.request_history if r.path == "/control"]
+    assert len(control_requests) == 1
+    assert "mode=1" in control_requests[0].text
+
+
+def test_apply_bulk_action_mode_and_setpoints(mock_device):
+    from heatctl.device_client import apply_bulk_action
+
+    apply_bulk_action(_device(), mode="HEAT", heat_temp=69, cool_temp=None)
+
+    control_requests = [r for r in mock_device.request_history if r.path == "/control"]
+    # First request sets mode (echoing back current setpoints unchanged),
+    # second request applies the new heat setpoint.
+    assert len(control_requests) == 2
+    assert "mode=1" in control_requests[0].text
+    assert "heattemp=69" in control_requests[1].text
+    assert "cooltemp=75" in control_requests[1].text
+
+
+def test_apply_bulk_action_no_mode_no_setpoints_is_noop(mock_device):
+    from heatctl.device_client import apply_bulk_action
+
+    apply_bulk_action(_device(), mode=None, heat_temp=None, cool_temp=None)
+
+    control_requests = [r for r in mock_device.request_history if r.path == "/control"]
+    assert control_requests == []

@@ -48,3 +48,41 @@ async def test_update_and_delete_schedule_entry(client):
 
     resp = await client.get(f"/devices/{device_id}/schedule")
     assert resp.json() == []
+
+
+async def test_list_schedule_requires_valid_device(client):
+    resp = await client.get("/devices/999/schedule")
+    assert resp.status_code == 404
+
+
+async def test_update_missing_schedule_entry_404(client):
+    device_id = await _make_device(client)
+    resp = await client.patch(f"/devices/{device_id}/schedule/999", json={"heat_temp": 70})
+    assert resp.status_code == 404
+
+
+async def test_delete_missing_schedule_entry_404(client):
+    device_id = await _make_device(client)
+    resp = await client.delete(f"/devices/{device_id}/schedule/999")
+    assert resp.status_code == 404
+
+
+async def test_schedule_entry_scoped_to_its_own_device(client):
+    """An entry belonging to device A should 404 when looked up under device B."""
+    device_a = await _make_device(client)
+    resp = await client.post(
+        "/devices",
+        json={"name": "B", "site": "S", "host": "10.0.0.2"},
+    )
+    device_b = resp.json()["id"]
+
+    create = await client.post(
+        f"/devices/{device_a}/schedule", json={"day_of_week": 0, "time_of_day": "09:00:00", "heat_temp": 68}
+    )
+    entry_id = create.json()["id"]
+
+    resp = await client.patch(f"/devices/{device_b}/schedule/{entry_id}", json={"heat_temp": 70})
+    assert resp.status_code == 404
+
+    resp = await client.delete(f"/devices/{device_b}/schedule/{entry_id}")
+    assert resp.status_code == 404
