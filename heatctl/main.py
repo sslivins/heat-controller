@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 _ALEMBIC_INI = Path(__file__).resolve().parent.parent / "alembic.ini"
 
 
-def _run_migrations() -> None:
+def _run_migrations() -> None:  # pragma: no cover -- exercised via docker-compose e2e, not unit tests
     """Apply Alembic migrations up to head.
 
     This is the single source of truth for schema management -- tests
@@ -33,7 +33,7 @@ def _run_migrations() -> None:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # pragma: no cover -- lifespan not run by httpx test client
     await asyncio.to_thread(_run_migrations)
 
     scheduler_task = asyncio.create_task(scheduler.run_forever())
