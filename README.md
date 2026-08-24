@@ -34,12 +34,12 @@ workflow here is:
 az login --tenant af755c27-6a67-4492-b1a4-ca3ce41dea42
 az account set --subscription 9e09ebcd-8a09-4696-86c5-6385299f1113
 
-az group create --name agoragw-hvac-dev-rg --location westus
+az group create --name heat-controller-dev-rg --location westus
 
 az deployment group create \
-  --resource-group agoragw-hvac-dev-rg \
+  --resource-group heat-controller-dev-rg \
   --template-file infra/main.bicep \
-  --parameters infra/parameters/goodwill-dev.bicepparam \
+  --parameters infra/parameters/dev.bicepparam \
   --parameters remoteGatewayIp='<your-udm-wan-ip>' \
                sharedKey='<a-strong-shared-secret>'
 ```
@@ -70,7 +70,7 @@ static routes on both sides instead.
 ## Teardown
 
 ```bash
-az group delete --name agoragw-hvac-dev-rg --yes --no-wait
+az group delete --name heat-controller-dev-rg --yes --no-wait
 ```
 
 ## Next steps

@@ -16,9 +16,9 @@
 //
 // Usage:
 //   az deployment group create \
-//     --resource-group agoragw-hvac-dev-rg \
+//     --resource-group heat-controller-dev-rg \
 //     --template-file infra/main.bicep \
-//     --parameters infra/parameters/goodwill-dev.bicepparam \
+//     --parameters infra/parameters/dev.bicepparam \
 //     --parameters remoteGatewayIp='<your-udm-wan-ip>' sharedKey='<secure>'
 // ──────────────────────────────────────────────────────────────
 
