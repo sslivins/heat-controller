@@ -30,3 +30,9 @@ def decrypt_password(ciphertext: str | None) -> str | None:
         # plaintext data from before encryption was introduced. Treat as
         # "no usable credential" rather than crashing a poll/apply cycle.
         return None
+
+
+# PIN uses the same Fernet key/scheme as password -- separate names kept
+# only for readability at call sites.
+encrypt_pin = encrypt_password
+decrypt_pin = decrypt_password

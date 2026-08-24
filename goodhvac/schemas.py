@@ -26,6 +26,7 @@ class DeviceCreate(BaseModel):
     verify_tls: bool = False
     username: str | None = None
     password: str | None = None
+    pin: str | None = None
     enabled: bool = True
     tag_ids: list[int] = Field(default_factory=list)
 
@@ -39,6 +40,7 @@ class DeviceUpdate(BaseModel):
     verify_tls: bool | None = None
     username: str | None = None
     password: str | None = None
+    pin: str | None = None
     enabled: bool | None = None
     tag_ids: list[int] | None = None
 
@@ -55,13 +57,14 @@ class DeviceRead(BaseModel):
     verify_tls: bool
     username: str | None
     enabled: bool
+    has_pin: bool = False
     validation_status: ValidationStatus
     last_validation_error: str | None
     last_validated_at: datetime | None
     created_at: datetime
     updated_at: datetime
     tags: list[TagRead] = Field(default_factory=list)
-    # Deliberately excludes `password` -- never echo credentials back.
+    # Deliberately excludes `password`/`pin` -- never echo credentials back.
 
 
 class ScheduleEntryCreate(BaseModel):

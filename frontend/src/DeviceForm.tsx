@@ -29,6 +29,7 @@ export function DeviceForm({ device, tags, onSave, onClose }: Props) {
   const [verifyTls, setVerifyTls] = useState(device?.verify_tls ?? false);
   const [username, setUsername] = useState(device?.username ?? "");
   const [password, setPassword] = useState("");
+  const [pin, setPin] = useState("");
   const [enabled, setEnabled] = useState(device?.enabled ?? true);
   const [tagIds, setTagIds] = useState<number[]>(device?.tags.map((t) => t.id) ?? []);
   const [saving, setSaving] = useState(false);
@@ -56,6 +57,9 @@ export function DeviceForm({ device, tags, onSave, onClose }: Props) {
       };
       if (password) {
         payload.password = password;
+      }
+      if (pin) {
+        payload.pin = pin;
       }
       await onSave(payload);
       onClose();
@@ -118,6 +122,27 @@ export function DeviceForm({ device, tags, onSave, onClose }: Props) {
               {device && <span className="ml-1 text-xs text-muted-foreground">(leave blank to keep current)</span>}
             </Label>
             <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+
+          <div className="grid gap-1.5">
+            <Label htmlFor="pin">
+              Lockout PIN
+              <span className="ml-1 text-xs text-muted-foreground">
+                {device
+                  ? device.has_pin
+                    ? "(configured — leave blank to keep current)"
+                    : "(optional — leave blank if none set on the thermostat)"
+                  : "(optional — only if a PIN is set on the thermostat's touchscreen)"}
+              </span>
+            </Label>
+            <Input
+              id="pin"
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+            />
           </div>
 
           <label className="flex items-center gap-2 text-sm">

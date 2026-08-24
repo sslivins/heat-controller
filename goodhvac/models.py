@@ -103,6 +103,12 @@ class Device(Base):
     username: Mapped[str | None] = mapped_column(String(64), nullable=True)
     password: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
+    # Optional local touchscreen lock PIN. Encrypted at rest same as
+    # password (see goodhvac/crypto.py). Required by pyvenstar on every
+    # /control and /settings write once a PIN has been set on the
+    # physical thermostat -- reads are unaffected.
+    pin: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     # Set PENDING at creation; updated by the async post-create validation
@@ -122,6 +128,11 @@ class Device(Base):
         back_populates="device", cascade="all, delete-orphan", passive_deletes=True
     )
     tags: Mapped[list[Tag]] = relationship(secondary=device_tags, back_populates="devices")
+
+    @property
+    def has_pin(self) -> bool:
+        """Whether a local touchscreen lock PIN is configured, without exposing its value."""
+        return self.pin is not None
     status: Mapped[DeviceStatusCache | None] = relationship(
         back_populates="device", cascade="all, delete-orphan", passive_deletes=True, uselist=False
     )

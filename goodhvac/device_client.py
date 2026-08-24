@@ -6,7 +6,7 @@ import logging
 
 from pyvenstar import ThermostatMode, VenstarAPIError, VenstarClient, VenstarConnectionError
 
-from goodhvac.crypto import decrypt_password
+from goodhvac.crypto import decrypt_password, decrypt_pin
 from goodhvac.models import Device
 from goodhvac.schemas import DeviceStatus
 
@@ -21,6 +21,7 @@ def client_for(device: Device) -> VenstarClient:
         verify_tls=device.verify_tls,
         user=device.username,
         password=decrypt_password(device.password),
+        pin=decrypt_pin(device.pin),
     )
 
 

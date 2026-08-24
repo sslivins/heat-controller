@@ -16,6 +16,7 @@ export interface Device {
   verify_tls: boolean;
   username: string | null;
   enabled: boolean;
+  has_pin: boolean;
   validation_status: ValidationStatus;
   last_validation_error: string | null;
   last_validated_at: string | null;
@@ -33,6 +34,7 @@ export interface DeviceCreate {
   verify_tls?: boolean;
   username?: string | null;
   password?: string | null;
+  pin?: string | null;
   enabled?: boolean;
   tag_ids?: number[];
 }
@@ -46,6 +48,7 @@ export interface DeviceUpdate {
   verify_tls?: boolean;
   username?: string | null;
   password?: string | null;
+  pin?: string | null;
   enabled?: boolean;
   tag_ids?: number[];
 }

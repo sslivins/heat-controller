@@ -13,7 +13,7 @@ from sqlalchemy.orm import selectinload
 
 from goodhvac import device_client
 from goodhvac.config import settings
-from goodhvac.crypto import encrypt_password
+from goodhvac.crypto import encrypt_password, encrypt_pin
 from goodhvac.database import get_db, session_scope
 from goodhvac.device_locks import bump_generation, forget, lock_for
 from goodhvac.models import Device, Tag, ValidationStatus
@@ -51,8 +51,8 @@ async def list_devices(db: AsyncSession = Depends(get_db)) -> list[Device]:
 
 @router.post("", response_model=DeviceRead, status_code=201)
 async def create_device(payload: DeviceCreate, db: AsyncSession = Depends(get_db)) -> Device:
-    data = payload.model_dump(exclude={"tag_ids", "password"})
-    device = Device(**data, password=encrypt_password(payload.password))
+    data = payload.model_dump(exclude={"tag_ids", "password", "pin"})
+    device = Device(**data, password=encrypt_password(payload.password), pin=encrypt_pin(payload.pin))
     device.tags = await _load_tags(db, payload.tag_ids)
     # validation_status defaults to PENDING at the model level -- a device
     # that isn't wired up / reachable yet is still created successfully.
@@ -118,12 +118,15 @@ async def get_device(device_id: int, db: AsyncSession = Depends(get_db)) -> Devi
 @router.patch("/{device_id}", response_model=DeviceRead)
 async def update_device(device_id: int, payload: DeviceUpdate, db: AsyncSession = Depends(get_db)) -> Device:
     device = await _get_device_or_404(device_id, db)
-    updates = payload.model_dump(exclude_unset=True, exclude={"tag_ids", "password"})
+    updates = payload.model_dump(exclude_unset=True, exclude={"tag_ids", "password", "pin"})
     for field, value in updates.items():
         setattr(device, field, value)
 
     if "password" in payload.model_fields_set:
         device.password = encrypt_password(payload.password)
+
+    if "pin" in payload.model_fields_set:
+        device.pin = encrypt_pin(payload.pin)
 
     if payload.tag_ids is not None:
         device.tags = await _load_tags(db, payload.tag_ids)
@@ -134,7 +137,7 @@ async def update_device(device_id: int, payload: DeviceUpdate, db: AsyncSession 
 
     # Credentials/host changed -- re-validate so validation_status doesn't
     # keep showing a stale result from before the edit.
-    if {"host", "port", "use_https", "verify_tls", "username", "password"} & payload.model_fields_set:
+    if {"host", "port", "use_https", "verify_tls", "username", "password", "pin"} & payload.model_fields_set:
         await _maybe_validate_async(device.id)
 
     return device
