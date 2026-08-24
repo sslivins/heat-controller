@@ -18,9 +18,10 @@ interface Props {
   tags: Tag[];
   onSave: (payload: DeviceCreate | DeviceUpdate) => Promise<void>;
   onClose: () => void;
+  onDelete?: (device: Device) => void;
 }
 
-export function DeviceForm({ device, tags, onSave, onClose }: Props) {
+export function DeviceForm({ device, tags, onSave, onClose, onDelete }: Props) {
   const [name, setName] = useState(device?.name ?? "");
   const [site, setSite] = useState(device?.site ?? "");
   const [host, setHost] = useState(device?.host ?? "");
@@ -176,6 +177,16 @@ export function DeviceForm({ device, tags, onSave, onClose }: Props) {
           )}
 
           <DialogFooter>
+            {device && onDelete && (
+              <Button
+                type="button"
+                variant="destructive"
+                className="sm:mr-auto"
+                onClick={() => onDelete(device)}
+              >
+                Remove device
+              </Button>
+            )}
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>

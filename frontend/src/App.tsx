@@ -141,7 +141,6 @@ export default function App() {
                       selected={selected.has(device.id)}
                       onToggleSelect={toggleSelect}
                       onEdit={setEditingDevice}
-                      onDelete={handleDeleteDevice}
                       onApply={handleSingleApply}
                     />
                   ))}
@@ -164,6 +163,10 @@ export default function App() {
           tags={tags}
           onSave={handleSaveDevice}
           onClose={() => setEditingDevice(undefined)}
+          onDelete={(device) => {
+            setEditingDevice(undefined);
+            void handleDeleteDevice(device);
+          }}
         />
       )}
     </div>

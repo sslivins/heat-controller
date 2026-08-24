@@ -21,7 +21,6 @@ interface Props {
   selected: boolean;
   onToggleSelect: (id: number) => void;
   onEdit: (device: Device) => void;
-  onDelete: (device: Device) => void;
   onApply: (
     deviceId: number,
     mode: string | null,
@@ -49,7 +48,7 @@ const MODE_ICON: Record<string, typeof Flame> = {
   OFF: Power,
 };
 
-export function DeviceCard({ device, status, selected, onToggleSelect, onEdit, onDelete, onApply }: Props) {
+export function DeviceCard({ device, status, selected, onToggleSelect, onEdit, onApply }: Props) {
   const mode = status?.mode ?? null;
   const accent = MODE_ACCENT[mode ?? "OFF"] ?? MODE_ACCENT.OFF;
   const ModeIcon = MODE_ICON[mode ?? "OFF"] ?? Power;
@@ -258,9 +257,6 @@ export function DeviceCard({ device, status, selected, onToggleSelect, onEdit, o
         <div className="flex justify-end gap-2 pt-1">
           <Button type="button" size="sm" variant="outline" onClick={() => onEdit(device)}>
             Edit
-          </Button>
-          <Button type="button" size="sm" variant="destructive" onClick={() => onDelete(device)}>
-            Delete
           </Button>
         </div>
       </CardContent>
