@@ -1,5 +1,17 @@
 import { useState } from "react";
 import type { Device, DeviceCreate, DeviceUpdate, Tag } from "./types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Props {
   device: Device | null; // null = creating a new device
@@ -55,78 +67,99 @@ export function DeviceForm({ device, tags, onSave, onClose }: Props) {
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
-        <h2>{device ? "Edit device" : "Add device"}</h2>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <DialogHeader>
+            <DialogTitle>{device ? "Edit device" : "Add device"}</DialogTitle>
+          </DialogHeader>
 
-        <label>
-          Name
-          <input value={name} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <label>
-          Site
-          <input value={site} onChange={(e) => setSite(e.target.value)} required />
-        </label>
-        <label>
-          Host
-          <input value={host} onChange={(e) => setHost(e.target.value)} required />
-        </label>
-        <div className="form-row">
-          <label>
-            Port
-            <input type="number" value={port} onChange={(e) => setPort(e.target.value)} />
-          </label>
-          <label className="checkbox-label">
-            <input type="checkbox" checked={useHttps} onChange={(e) => setUseHttps(e.target.checked)} />
-            HTTPS
-          </label>
-          <label className="checkbox-label">
-            <input type="checkbox" checked={verifyTls} onChange={(e) => setVerifyTls(e.target.checked)} />
-            Verify TLS
-          </label>
-        </div>
-        <label>
-          Username
-          <input value={username} onChange={(e) => setUsername(e.target.value)} />
-        </label>
-        <label>
-          Password {device && <span className="hint">(leave blank to keep current)</span>}
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <label className="checkbox-label">
-          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
-          Enabled
-        </label>
+          <div className="grid gap-1.5">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="site">Site</Label>
+            <Input id="site" value={site} onChange={(e) => setSite(e.target.value)} required />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="host">Host</Label>
+            <Input id="host" value={host} onChange={(e) => setHost(e.target.value)} required />
+          </div>
 
-        {tags.length > 0 && (
-          <fieldset>
-            <legend>Tags</legend>
-            <div className="tag-picker">
-              {tags.map((t) => (
-                <label key={t.id} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={tagIds.includes(t.id)}
-                    onChange={() => toggleTag(t.id)}
-                  />
-                  {t.key}:{t.value}
-                </label>
-              ))}
+          <div className="flex flex-wrap items-end gap-4">
+            <div className="grid gap-1.5">
+              <Label htmlFor="port">Port</Label>
+              <Input
+                id="port"
+                type="number"
+                className="w-24"
+                value={port}
+                onChange={(e) => setPort(e.target.value)}
+              />
             </div>
-          </fieldset>
-        )}
+            <label className="flex items-center gap-2 pb-2 text-sm">
+              <Checkbox checked={useHttps} onCheckedChange={(v) => setUseHttps(v === true)} />
+              HTTPS
+            </label>
+            <label className="flex items-center gap-2 pb-2 text-sm">
+              <Checkbox checked={verifyTls} onCheckedChange={(v) => setVerifyTls(v === true)} />
+              Verify TLS
+            </label>
+          </div>
 
-        {error && <div className="form-error">{error}</div>}
+          <div className="grid gap-1.5">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="password">
+              Password
+              {device && <span className="ml-1 text-xs text-muted-foreground">(leave blank to keep current)</span>}
+            </Label>
+            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
 
-        <div className="modal__actions">
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
-          <button type="submit" disabled={saving}>
-            {saving ? "Saving…" : "Save"}
-          </button>
-        </div>
-      </form>
-    </div>
+          <label className="flex items-center gap-2 text-sm">
+            <Checkbox checked={enabled} onCheckedChange={(v) => setEnabled(v === true)} />
+            Enabled
+          </label>
+
+          {tags.length > 0 && (
+            <div className="grid gap-1.5">
+              <Label>Tags</Label>
+              <div className="flex flex-wrap gap-1.5">
+                {tags.map((t) => {
+                  const active = tagIds.includes(t.id);
+                  return (
+                    <Badge
+                      key={t.id}
+                      variant={active ? "default" : "outline"}
+                      className="cursor-pointer select-none font-normal"
+                      onClick={() => toggleTag(t.id)}
+                    >
+                      {t.key}:{t.value}
+                    </Badge>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
+          )}
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Saving…" : "Save"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -4,6 +4,7 @@
 !frontend/package-lock.json
 !frontend/tsconfig*.json
 !frontend/.oxlintrc.json
+!frontend/components.json
 
 # Python
 .venv/
