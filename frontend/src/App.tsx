@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
 import { useDeviceStatuses } from "./useDeviceStatuses";
+import { useTheme } from "./useTheme";
 import { DeviceCard } from "./DeviceCard";
 import { BulkActionBar } from "./BulkActionBar";
 import { DeviceForm } from "./DeviceForm";
 import type { Device, DeviceCreate, DeviceUpdate, Tag } from "./types";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Sun, Moon, MonitorCog } from "lucide-react";
+
+const THEME_CYCLE = ["auto", "light", "dark"] as const;
+const THEME_ICON = { auto: MonitorCog, light: Sun, dark: Moon };
 
 export default function App() {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -16,6 +20,8 @@ export default function App() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [editingDevice, setEditingDevice] = useState<Device | null | undefined>(undefined); // undefined = form closed
   const statuses = useDeviceStatuses();
+  const [theme, setTheme] = useTheme();
+  const ThemeIcon = THEME_ICON[theme];
 
   async function refresh() {
     const [d, t] = await Promise.all([api.listDevices(), api.listTags()]);
@@ -87,10 +93,24 @@ export default function App() {
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-card/95 px-6 py-4 backdrop-blur">
         <h1 className="text-lg font-semibold tracking-tight">heat-controller</h1>
-        <Button type="button" onClick={() => setEditingDevice(null)}>
-          <Plus className="size-4" />
-          Add device
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            title={`Theme: ${theme}`}
+            onClick={() => {
+              const next = THEME_CYCLE[(THEME_CYCLE.indexOf(theme) + 1) % THEME_CYCLE.length];
+              setTheme(next);
+            }}
+          >
+            <ThemeIcon className="size-4" />
+          </Button>
+          <Button type="button" onClick={() => setEditingDevice(null)}>
+            <Plus className="size-4" />
+            Add device
+          </Button>
+        </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-6">
