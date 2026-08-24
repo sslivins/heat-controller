@@ -1,6 +1,9 @@
 # Bicep build artifacts
 *.json
 !package.json
+!frontend/package-lock.json
+!frontend/tsconfig*.json
+!frontend/.oxlintrc.json
 
 # Python
 .venv/

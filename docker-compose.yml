@@ -11,6 +11,14 @@ services:
       db:
         condition: service_healthy
 
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+
   db:
     image: postgres:16-alpine
     restart: unless-stopped
