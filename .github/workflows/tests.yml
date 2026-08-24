@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: heatctl
+          POSTGRES_PASSWORD: heatctl
+          POSTGRES_DB: heatctl
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U heatctl -d heatctl"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-test.txt ruff mypy
+
+      - name: Lint (ruff)
+        run: ruff check heatctl tests
+
+      - name: Type-check (mypy)
+        run: mypy heatctl
+
+      - name: Alembic migrations up to date
+        env:
+          HEATCTL_DATABASE_URL: postgresql+asyncpg://heatctl:heatctl@localhost:5432/heatctl
+        run: |
+          alembic upgrade head
+          alembic check
+
+      - name: Run tests
+        run: pytest -q --cov=heatctl --cov-report=term-missing --cov-fail-under=85
