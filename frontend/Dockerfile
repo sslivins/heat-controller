@@ -3,6 +3,8 @@
 # `app` service so the browser only ever talks to one origin.
 FROM node:22-alpine AS build
 WORKDIR /app
+ARG NPM_REGISTRY
+RUN if [ -n "$NPM_REGISTRY" ]; then npm config set registry "$NPM_REGISTRY"; fi
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .

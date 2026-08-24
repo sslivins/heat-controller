@@ -10,6 +10,9 @@ ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 
 WORKDIR /app
 
+ARG PIP_EXTRA_INDEX_URL
+ENV PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL}
+
 COPY requirements.txt requirements-test.txt ./
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt -r requirements-test.txt
 
