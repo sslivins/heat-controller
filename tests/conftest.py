@@ -7,6 +7,7 @@ import os
 # Force SQLite before importing anything that reads heatctl.config.settings
 # at import time (the settings singleton is constructed once, at import).
 os.environ["HEATCTL_DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
+os.environ["HEATCTL_DISABLE_ASYNC_VALIDATION"] = "true"
 
 import pytest
 from httpx import ASGITransport, AsyncClient

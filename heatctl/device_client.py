@@ -6,6 +6,7 @@ import logging
 
 from pyvenstar import ThermostatMode, VenstarAPIError, VenstarClient, VenstarConnectionError
 
+from heatctl.crypto import decrypt_password
 from heatctl.models import Device
 from heatctl.schemas import DeviceStatus
 
@@ -19,7 +20,7 @@ def client_for(device: Device) -> VenstarClient:
         use_tls=device.use_https,
         verify_tls=device.verify_tls,
         user=device.username,
-        password=device.password,
+        password=decrypt_password(device.password),
     )
 
 
@@ -70,3 +71,40 @@ def apply_setpoints(device: Device, heat_temp: float | None, cool_temp: float | 
                 target_heat = target_cool - info.setpoint_delta
 
         client.set_setpoints(target_heat, target_cool)
+
+
+def apply_bulk_action(
+    device: Device, mode: str | None, heat_temp: float | None, cool_temp: float | None
+) -> None:
+    """Apply an optional mode change plus optional setpoints, for the bulk-control endpoint.
+
+    Unlike apply_setpoints() (used by the scheduler, which only ever sets
+    temperatures), this also accepts a mode string (e.g. "HEAT", "COOL",
+    "OFF", "AUTO") from the bulk-apply request. Mode is applied first so
+    a subsequent setpoint validation (e.g. AUTO's min delta) sees the
+    target mode's constraints, not the device's previous mode.
+
+    Raises pyvenstar's VenstarConnectionError/VenstarAPIError on failure;
+    callers (the bulk-apply endpoint) are responsible for catching these
+    per-device so one bad device doesn't fail the whole batch.
+    """
+    with client_for(device) as client:
+        if mode is not None:
+            client.set_mode(ThermostatMode[mode.upper()])
+
+        if heat_temp is None and cool_temp is None:
+            return
+
+        info = client.get_info()
+        target_heat = heat_temp if heat_temp is not None else info.heat_temp
+        target_cool = cool_temp if cool_temp is not None else info.cool_temp
+
+        effective_mode = ThermostatMode[mode.upper()] if mode is not None else info.mode
+        if effective_mode == ThermostatMode.AUTO and (target_cool - target_heat) < info.setpoint_delta:
+            if heat_temp is not None and cool_temp is None:
+                target_cool = target_heat + info.setpoint_delta
+            elif cool_temp is not None and heat_temp is None:
+                target_heat = target_cool - info.setpoint_delta
+
+        client.set_setpoints(target_heat, target_cool)
+

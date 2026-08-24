@@ -31,5 +31,28 @@ class Settings(BaseSettings):
     # Default HTTP timeout (seconds) for device API calls.
     device_timeout_seconds: float = 10.0
 
+    # Status poller: how often (seconds) each device is polled, and the
+    # max number of devices polled concurrently (keeps LAN/event-loop load
+    # bounded regardless of fleet size).
+    status_poll_interval_seconds: float = 20.0
+    status_poll_concurrency: int = 10
+    # Consecutive failed polls before a device flips from "degraded" to
+    # "offline" in the UI -- avoids flagging a device red on one dropped
+    # packet.
+    status_offline_after_failures: int = 3
+
+    # Fernet key (44-char urlsafe-base64 string from cryptography.fernet.Fernet.generate_key())
+    # used to encrypt device passwords at rest. Required in production;
+    # a fixed dev-only key is used as a fallback so tests/local runs work
+    # without extra setup.
+    credential_encryption_key: str = "kkMGGskqapgFSDE0Mamz0VoB6ZCW3Xk-s4ATRNkRVUE="
+
+    # Disables the fire-and-forget post-create/update device validation
+    # task. Off by default in production; the test suite sets this True
+    # so tests don't spawn real background network calls against a
+    # per-test SQLite engine/event loop that's already torn down by the
+    # time the task would run.
+    disable_async_validation: bool = False
+
 
 settings = Settings()

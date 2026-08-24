@@ -12,9 +12,9 @@ from alembic.config import Config
 from fastapi import FastAPI
 
 from alembic import command
-from heatctl import scheduler
+from heatctl import scheduler, status_poller
 from heatctl.database import dispose_engine
-from heatctl.routers import devices, schedule
+from heatctl.routers import devices, schedule, tags, ws
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,16 +37,20 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # pragma: no cover -- 
     await asyncio.to_thread(_run_migrations)
 
     scheduler_task = asyncio.create_task(scheduler.run_forever())
+    poller_task = asyncio.create_task(status_poller.run_forever())
     try:
         yield
     finally:
         scheduler_task.cancel()
+        poller_task.cancel()
         await dispose_engine()
 
 
 app = FastAPI(title="heat-controller", lifespan=lifespan)
 app.include_router(devices.router)
 app.include_router(schedule.router)
+app.include_router(tags.router)
+app.include_router(ws.router)
 
 
 @app.get("/healthz")

@@ -16,6 +16,7 @@ from sqlalchemy import select
 from heatctl import device_client
 from heatctl.config import settings
 from heatctl.database import session_scope
+from heatctl.device_locks import lock_for
 from heatctl.models import DayOfWeek, Device, ScheduleEntry
 
 logger = logging.getLogger("heatctl.scheduler")
@@ -63,7 +64,8 @@ async def tick(now: datetime | None = None) -> int:
                 continue
 
             try:
-                await asyncio.to_thread(device_client.apply_setpoints, device, entry.heat_temp, entry.cool_temp)
+                async with lock_for(device.id):
+                    await asyncio.to_thread(device_client.apply_setpoints, device, entry.heat_temp, entry.cool_temp)
             except Exception as exc:  # noqa: BLE001 -- log and continue with other entries
                 logger.warning(
                     "Failed to apply schedule entry %s to device %s: %s", entry.id, device.name, exc
