@@ -98,7 +98,7 @@ async def _poll_device(device_id: int, semaphore: asyncio.Semaphore) -> None:
 
             cache = await session.get(DeviceStatusCache, device_id)
             if cache is None:
-                cache = DeviceStatusCache(device_id=device_id)
+                cache = DeviceStatusCache(device_id=device_id, consecutive_failures=0)
                 session.add(cache)
 
             now = datetime.now(UTC)
