@@ -68,7 +68,7 @@ export interface DeviceStatusMessage {
 
 export type WsMessage =
   | { type: "snapshot"; devices: DeviceStatusMessage[] }
-  | { type: "status"; device: DeviceStatusMessage };
+  | ({ type: "device_status" } & DeviceStatusMessage);
 
 export type BulkOutcome = "applied" | "rejected" | "unreachable" | "timed_out" | "skipped_disabled";
 

@@ -28,10 +28,10 @@ export function useDeviceStatuses(): Map<number, DeviceStatusMessage> {
         const msg = JSON.parse(event.data) as WsMessage;
         if (msg.type === "snapshot") {
           setStatuses(new Map(msg.devices.map((d) => [d.device_id, d])));
-        } else if (msg.type === "status") {
+        } else if (msg.type === "device_status") {
           setStatuses((prev) => {
             const next = new Map(prev);
-            next.set(msg.device.device_id, msg.device);
+            next.set(msg.device_id, msg);
             return next;
           });
         }
