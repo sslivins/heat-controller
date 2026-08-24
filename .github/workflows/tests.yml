@@ -51,4 +51,4 @@ jobs:
           alembic check
 
       - name: Run tests
-        run: pytest -q --cov=heatctl --cov-report=term-missing --cov-fail-under=85
+        run: pytest -v --cov=heatctl --cov-report=term-missing --cov-fail-under=85
