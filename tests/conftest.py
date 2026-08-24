@@ -4,18 +4,18 @@ from __future__ import annotations
 
 import os
 
-# Force SQLite before importing anything that reads heatctl.config.settings
+# Force SQLite before importing anything that reads goodhvac.config.settings
 # at import time (the settings singleton is constructed once, at import).
-os.environ["HEATCTL_DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
-os.environ["HEATCTL_DISABLE_ASYNC_VALIDATION"] = "true"
+os.environ["GOODHVAC_DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
+os.environ["GOODHVAC_DISABLE_ASYNC_VALIDATION"] = "true"
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.pool import StaticPool
 
-import heatctl.database as db_module
-from heatctl.database import Base
-from heatctl.main import app
+import goodhvac.database as db_module
+from goodhvac.database import Base
+from goodhvac.main import app
 
 
 @pytest.fixture(autouse=True)

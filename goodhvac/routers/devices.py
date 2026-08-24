@@ -11,13 +11,13 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from heatctl import device_client
-from heatctl.config import settings
-from heatctl.crypto import encrypt_password
-from heatctl.database import get_db, session_scope
-from heatctl.device_locks import bump_generation, forget, lock_for
-from heatctl.models import Device, Tag, ValidationStatus
-from heatctl.schemas import (
+from goodhvac import device_client
+from goodhvac.config import settings
+from goodhvac.crypto import encrypt_password
+from goodhvac.database import get_db, session_scope
+from goodhvac.device_locks import bump_generation, forget, lock_for
+from goodhvac.models import Device, Tag, ValidationStatus
+from goodhvac.schemas import (
     BulkApplyRequest,
     BulkApplyResponse,
     BulkApplyResult,
@@ -27,7 +27,7 @@ from heatctl.schemas import (
     DeviceUpdate,
 )
 
-logger = logging.getLogger("heatctl.routers.devices")
+logger = logging.getLogger("goodhvac.routers.devices")
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 
@@ -171,7 +171,7 @@ async def bulk_apply(payload: BulkApplyRequest, db: AsyncSession = Depends(get_d
 
     Always attempts every enabled selected device live (cached "offline"
     status is advisory only and may be stale -- see design notes in
-    heatctl/status_poller.py) and reports per-device outcomes rather
+    goodhvac/status_poller.py) and reports per-device outcomes rather
     than failing the whole request if some devices are unreachable.
     """
     result = await db.execute(select(Device).where(Device.id.in_(payload.device_ids)))

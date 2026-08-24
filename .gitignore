@@ -19,4 +19,4 @@ htmlcov/
 
 # Local env / db
 .env
-heatctl.db
+goodhvac.db

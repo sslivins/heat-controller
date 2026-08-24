@@ -1,6 +1,6 @@
 """Centralized scheduler: periodically applies due ScheduleEntry rows to devices.
 
-Runs as its own asyncio task (started from heatctl.main's lifespan), since
+Runs as its own asyncio task (started from goodhvac.main's lifespan), since
 the T8900 Local API has no remote-writable weekly schedule of its own --
 see README "Why is scheduling centralized?".
 """
@@ -13,13 +13,13 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 
-from heatctl import device_client
-from heatctl.config import settings
-from heatctl.database import session_scope
-from heatctl.device_locks import lock_for
-from heatctl.models import DayOfWeek, Device, ScheduleEntry
+from goodhvac import device_client
+from goodhvac.config import settings
+from goodhvac.database import session_scope
+from goodhvac.device_locks import lock_for
+from goodhvac.models import DayOfWeek, Device, ScheduleEntry
 
-logger = logging.getLogger("heatctl.scheduler")
+logger = logging.getLogger("goodhvac.scheduler")
 
 # An entry is only "due" within this window of its scheduled time, so a
 # slow tick or brief scheduler downtime doesn't cause it to fire hours

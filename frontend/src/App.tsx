@@ -92,7 +92,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-card/95 px-6 py-4 backdrop-blur">
-        <h1 className="text-lg font-semibold tracking-tight">heat-controller</h1>
+        <h1 className="text-lg font-semibold tracking-tight">GoodHVAC</h1>
         <div className="flex items-center gap-2">
           <Button
             type="button"

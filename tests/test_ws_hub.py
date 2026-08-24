@@ -6,7 +6,7 @@ import asyncio
 
 import pytest
 
-from heatctl.ws_hub import StatusHub
+from goodhvac.ws_hub import StatusHub
 
 
 class _FakeWebSocket:

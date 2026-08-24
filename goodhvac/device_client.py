@@ -6,11 +6,11 @@ import logging
 
 from pyvenstar import ThermostatMode, VenstarAPIError, VenstarClient, VenstarConnectionError
 
-from heatctl.crypto import decrypt_password
-from heatctl.models import Device
-from heatctl.schemas import DeviceStatus
+from goodhvac.crypto import decrypt_password
+from goodhvac.models import Device
+from goodhvac.schemas import DeviceStatus
 
-logger = logging.getLogger("heatctl.device_client")
+logger = logging.getLogger("goodhvac.device_client")
 
 
 def client_for(device: Device) -> VenstarClient:

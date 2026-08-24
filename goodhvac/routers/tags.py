@@ -7,9 +7,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from heatctl.database import get_db
-from heatctl.models import Tag
-from heatctl.schemas import TagCreate, TagRead
+from goodhvac.database import get_db
+from goodhvac.models import Tag
+from goodhvac.schemas import TagCreate, TagRead
 
 router = APIRouter(prefix="/tags", tags=["tags"])
 

@@ -10,7 +10,7 @@ services:
       - "8080:8080"
     env_file: .env
     environment:
-      - HEATCTL_DATABASE_URL=postgresql+asyncpg://heatctl:heatctl@db:5432/heatctl
+      - GOODHVAC_DATABASE_URL=postgresql+asyncpg://goodhvac:goodhvac@db:5432/goodhvac
     depends_on:
       db:
         condition: service_healthy
@@ -30,13 +30,13 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=heatctl
-      - POSTGRES_PASSWORD=heatctl
-      - POSTGRES_DB=heatctl
+      - POSTGRES_USER=goodhvac
+      - POSTGRES_PASSWORD=goodhvac
+      - POSTGRES_DB=goodhvac
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U heatctl -d heatctl"]
+      test: ["CMD-SHELL", "pg_isready -U goodhvac -d goodhvac"]
       interval: 5s
       timeout: 3s
       retries: 5

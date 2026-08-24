@@ -9,7 +9,7 @@ Design notes (see session design review):
 - Separate loop from the scheduler: polling and scheduled-apply have
   different cadence and failure semantics; a slow device poll must
   never delay a time-sensitive scheduled setpoint change.
-- Per-device lock (heatctl.device_locks) shared with the scheduler and
+- Per-device lock (goodhvac.device_locks) shared with the scheduler and
   bulk-apply endpoint -- if a write is in flight for a device, its poll
   is skipped for this cycle rather than blocking or racing pyvenstar's
   HTTP session.
@@ -33,14 +33,14 @@ from datetime import UTC, datetime
 
 from sqlalchemy import select
 
-from heatctl import device_client
-from heatctl.config import settings
-from heatctl.database import session_scope
-from heatctl.device_locks import current_generation, lock_for
-from heatctl.models import Device, DeviceStatusCache
-from heatctl.ws_hub import status_hub
+from goodhvac import device_client
+from goodhvac.config import settings
+from goodhvac.database import session_scope
+from goodhvac.device_locks import current_generation, lock_for
+from goodhvac.models import Device, DeviceStatusCache
+from goodhvac.ws_hub import status_hub
 
-logger = logging.getLogger("heatctl.status_poller")
+logger = logging.getLogger("goodhvac.status_poller")
 
 
 async def run_forever() -> None:

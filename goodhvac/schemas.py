@@ -6,7 +6,7 @@ from datetime import datetime, time
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from heatctl.models import DayOfWeek, ValidationStatus
+from goodhvac.models import DayOfWeek, ValidationStatus
 
 
 class TagRead(BaseModel):

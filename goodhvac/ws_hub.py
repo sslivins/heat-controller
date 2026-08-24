@@ -26,7 +26,7 @@ from typing import Any
 
 from fastapi import WebSocket
 
-logger = logging.getLogger("heatctl.ws_hub")
+logger = logging.getLogger("goodhvac.ws_hub")
 
 _QUEUE_MAXSIZE = 200
 

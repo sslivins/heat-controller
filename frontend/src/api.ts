@@ -1,4 +1,4 @@
-/** Thin fetch wrapper for the heatctl API. Base URL comes from Vite env / dev proxy. */
+/** Thin fetch wrapper for the goodhvac API. Base URL comes from Vite env / dev proxy. */
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 

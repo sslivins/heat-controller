@@ -16,7 +16,7 @@
 //
 // Usage:
 //   az deployment group create \
-//     --resource-group heat-controller-dev-rg \
+//     --resource-group goodhvac-dev-rg \
 //     --template-file infra/main.bicep \
 //     --parameters infra/parameters/dev.bicepparam \
 //     --parameters remoteGatewayIp='<your-udm-wan-ip>' sharedKey='<secure>'

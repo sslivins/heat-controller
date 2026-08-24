@@ -7,7 +7,7 @@ import asyncio
 import pytest
 from pyvenstar import VenstarConnectionError
 
-from heatctl import device_client
+from goodhvac import device_client
 
 
 async def _create_device(client, name="A", host="10.0.0.1", enabled=True):
@@ -82,7 +82,7 @@ async def test_bulk_apply_timeout(client, monkeypatch):
     monkeypatch.setattr(device_client, "apply_bulk_action", fake_apply)
 
     # Patch the timeout down so the test doesn't need to wait 15s.
-    import heatctl.routers.devices as devices_router
+    import goodhvac.routers.devices as devices_router
 
     original_wait_for = asyncio.wait_for
 
@@ -127,7 +127,7 @@ async def test_bulk_apply_runs_devices_concurrently(client, monkeypatch):
 def _reset_locks():
     """Bulk-apply tests share the module-level device_locks dicts across tests; clear between runs."""
     yield
-    from heatctl.device_locks import _generations, _locks
+    from goodhvac.device_locks import _generations, _locks
 
     _locks.clear()
     _generations.clear()

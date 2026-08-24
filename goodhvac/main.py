@@ -12,9 +12,9 @@ from alembic.config import Config
 from fastapi import FastAPI
 
 from alembic import command
-from heatctl import scheduler, status_poller
-from heatctl.database import dispose_engine
-from heatctl.routers import devices, schedule, tags, ws
+from goodhvac import scheduler, status_poller
+from goodhvac.database import dispose_engine
+from goodhvac.routers import devices, schedule, tags, ws
 
 logging.basicConfig(level=logging.INFO)
 
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:  # pragma: no cover -- 
         await dispose_engine()
 
 
-app = FastAPI(title="heat-controller", lifespan=lifespan)
+app = FastAPI(title="GoodHVAC", lifespan=lifespan)
 app.include_router(devices.router)
 app.include_router(schedule.router)
 app.include_router(tags.router)

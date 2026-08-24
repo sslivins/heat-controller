@@ -5,16 +5,16 @@ from __future__ import annotations
 import asyncio
 import os
 
-os.environ.setdefault("HEATCTL_DATABASE_URL", "sqlite+aiosqlite:///:memory:")
-os.environ.setdefault("HEATCTL_DISABLE_ASYNC_VALIDATION", "true")
+os.environ.setdefault("GOODHVAC_DATABASE_URL", "sqlite+aiosqlite:///:memory:")
+os.environ.setdefault("GOODHVAC_DISABLE_ASYNC_VALIDATION", "true")
 
 import pytest
 from fastapi.testclient import TestClient
 
-import heatctl.main as main_module
-from heatctl.models import DeviceStatusCache
-from heatctl.status_poller import status_message
-from heatctl.ws_hub import status_hub
+import goodhvac.main as main_module
+from goodhvac.models import DeviceStatusCache
+from goodhvac.status_poller import status_message
+from goodhvac.ws_hub import status_hub
 
 
 @pytest.fixture

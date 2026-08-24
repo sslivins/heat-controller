@@ -2,7 +2,7 @@
 
 Schedules live here (not on the device) because the T8900 Local API has
 no remote-writable weekly-schedule endpoint -- see README for details.
-The scheduler loop (heatctl/scheduler.py) reads these rows and pushes
+The scheduler loop (goodhvac/scheduler.py) reads these rows and pushes
 setpoints to devices via pyvenstar at the right times.
 """
 
@@ -27,7 +27,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from heatctl.database import Base
+from goodhvac.database import Base
 
 
 class DayOfWeek(enum.IntEnum):
@@ -98,7 +98,7 @@ class Device(Base):
     verify_tls: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     # Local API credentials. Password is encrypted at rest (see
-    # heatctl/crypto.py) -- the column stores a Fernet token, never
+    # goodhvac/crypto.py) -- the column stores a Fernet token, never
     # plaintext. Username isn't treated as secret.
     username: Mapped[str | None] = mapped_column(String(64), nullable=True)
     password: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -106,7 +106,7 @@ class Device(Base):
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     # Set PENDING at creation; updated by the async post-create validation
-    # check and by every subsequent status poll (see heatctl/status_poller.py).
+    # check and by every subsequent status poll (see goodhvac/status_poller.py).
     validation_status: Mapped[ValidationStatus] = mapped_column(
         Enum(ValidationStatus), nullable=False, default=ValidationStatus.PENDING
     )

@@ -7,18 +7,18 @@ from datetime import UTC, datetime
 import pytest
 from sqlalchemy import select
 
-from heatctl import device_client, status_poller
-from heatctl.database import session_scope
-from heatctl.device_locks import bump_generation, current_generation
-from heatctl.models import Device, DeviceStatusCache
-from heatctl.schemas import DeviceStatus
+from goodhvac import device_client, status_poller
+from goodhvac.database import session_scope
+from goodhvac.device_locks import bump_generation, current_generation
+from goodhvac.models import Device, DeviceStatusCache
+from goodhvac.schemas import DeviceStatus
 
 
 @pytest.fixture(autouse=True)
 def _reset_locks():
     """device_locks is module-level state shared across tests; clear it between runs."""
     yield
-    from heatctl.device_locks import _generations, _locks
+    from goodhvac.device_locks import _generations, _locks
 
     _locks.clear()
     _generations.clear()
@@ -60,7 +60,7 @@ async def test_poll_hysteresis_degraded_then_offline(monkeypatch):
     monkeypatch.setattr(device_client, "get_status", fake_get_status)
 
     # Import here so we read the actual configured threshold instead of hardcoding it.
-    from heatctl.config import settings
+    from goodhvac.config import settings
 
     threshold = settings.status_offline_after_failures
     assert threshold >= 2, "test assumes threshold > 1 to exercise the degraded state"

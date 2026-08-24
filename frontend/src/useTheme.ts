@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type ThemePreference = "light" | "dark" | "auto";
 
-const STORAGE_KEY = "heatctl-theme";
+const STORAGE_KEY = "goodhvac-theme";
 
 function applyTheme(preference: ThemePreference) {
   const root = document.documentElement;

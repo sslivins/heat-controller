@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from cryptography.fernet import Fernet, InvalidToken
 
-from heatctl.config import settings
+from goodhvac.config import settings
 
 _fernet = Fernet(settings.credential_encryption_key.encode())
 

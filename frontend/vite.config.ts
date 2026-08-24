@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   server: {
-    // Proxy API + WS calls to the heatctl backend during `npm run dev` so
+    // Proxy API + WS calls to the goodhvac backend during `npm run dev` so
     // the SPA can call relative paths (/devices, /ws/status, ...) without
     // CORS or hardcoding a host:port.
     proxy: {

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from heatctl.device_client import apply_setpoints, get_status
-from heatctl.models import Device
+from goodhvac.device_client import apply_setpoints, get_status
+from goodhvac.models import Device
 
 
 def _device(**overrides) -> Device:
@@ -63,7 +63,7 @@ def test_apply_setpoints_fills_missing_side(mock_device):
 
 
 def test_apply_bulk_action_mode_only(mock_device):
-    from heatctl.device_client import apply_bulk_action
+    from goodhvac.device_client import apply_bulk_action
 
     apply_bulk_action(_device(), mode="HEAT", heat_temp=None, cool_temp=None)
 
@@ -73,7 +73,7 @@ def test_apply_bulk_action_mode_only(mock_device):
 
 
 def test_apply_bulk_action_mode_and_setpoints(mock_device):
-    from heatctl.device_client import apply_bulk_action
+    from goodhvac.device_client import apply_bulk_action
 
     apply_bulk_action(_device(), mode="HEAT", heat_temp=69, cool_temp=None)
 
@@ -87,7 +87,7 @@ def test_apply_bulk_action_mode_and_setpoints(mock_device):
 
 
 def test_apply_bulk_action_no_mode_no_setpoints_is_noop(mock_device):
-    from heatctl.device_client import apply_bulk_action
+    from goodhvac.device_client import apply_bulk_action
 
     apply_bulk_action(_device(), mode=None, heat_temp=None, cool_temp=None)
 

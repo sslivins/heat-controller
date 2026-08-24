@@ -5,10 +5,10 @@ from __future__ import annotations
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from sqlalchemy import select
 
-from heatctl.database import session_scope
-from heatctl.models import DeviceStatusCache
-from heatctl.status_poller import status_message
-from heatctl.ws_hub import status_hub
+from goodhvac.database import session_scope
+from goodhvac.models import DeviceStatusCache
+from goodhvac.status_poller import status_message
+from goodhvac.ws_hub import status_hub
 
 router = APIRouter(tags=["status"])
 

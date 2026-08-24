@@ -6,9 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from heatctl.database import get_db
-from heatctl.models import Device, ScheduleEntry
-from heatctl.schemas import ScheduleEntryCreate, ScheduleEntryRead, ScheduleEntryUpdate
+from goodhvac.database import get_db
+from goodhvac.models import Device, ScheduleEntry
+from goodhvac.schemas import ScheduleEntryCreate, ScheduleEntryRead, ScheduleEntryUpdate
 
 router = APIRouter(prefix="/devices/{device_id}/schedule", tags=["schedule"])
 

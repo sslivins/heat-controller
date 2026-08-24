@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from heatctl.crypto import decrypt_password, encrypt_password
+from goodhvac.crypto import decrypt_password, encrypt_password
 
 
 def test_encrypt_decrypt_roundtrip():

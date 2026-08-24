@@ -1,7 +1,7 @@
 """Application configuration, loaded from environment variables.
 
 Mirrors agora-cms's pattern of a single pydantic-settings ``Settings``
-object with an ``HEATCTL_`` prefix, constructed once and imported
+object with an ``GOODHVAC_`` prefix, constructed once and imported
 wherever needed.
 """
 
@@ -11,12 +11,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="HEATCTL_", env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="GOODHVAC_", env_file=".env", extra="ignore")
 
     # Postgres in docker-compose / Azure Postgres Flexible Server in prod.
     # Falls back to a local SQLite file so tests and quick local runs don't
     # require a running Postgres instance.
-    database_url: str = "sqlite+aiosqlite:///./heatctl.db"
+    database_url: str = "sqlite+aiosqlite:///./goodhvac.db"
 
     # How often (seconds) the scheduler loop wakes up to check for due
     # schedule entries. 60s is fine for a fleet of ~50 devices checked
